@@ -26,7 +26,7 @@
 		reset-gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
 	};
 
-	hdmi-con {
+/*	hdmi-con {
 		compatible = "hdmi-connector";
 		type = "a";
 
@@ -35,7 +35,7 @@
 				remote-endpoint = <&hdmi_out_con>;
 			};
 		};
-	};
+	};*/
 
 	vccsys: vccsys {
 		compatible = "regulator-fixed";
@@ -81,43 +81,62 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&vcc_wifi_en>;
 	};
-};
 
-#if 0
-spi-lcd {
-	compatible = "spi-gpio";
-	#address-cells = <1>;
-	#size-cells = <0>;
+	spi_lcd: spi-lcd {
+		status = "okay";
+		compatible = "spi-gpio";
+		#address-cells = <1>;
+		#size-cells = <0>;
 
-	sck-gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_HIGH>;
-	mosi-gpios = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
-	num-chipselects = <1>;
-	cs-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
+		sck-gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_HIGH>;
+		mosi-gpios = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
+		num-chipselects = <1>;
+		cs-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
 
-	pinctrl-names = "default";
-	pinctrl-0 = <&spi_lcd>;
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&spi_lcd>;
 
-	lcd@0 {
-		compatible = "samsung,ams495qa04";
-		reg = <0>;
-		vdd-supply = <&vcc3v3_lcd0_n>;
-//		vci-supply = <TODO>; is it hardwired to battery?
-//		elvdd-supply = <TODO>;
-		reset-gpios = <&gpio4 RK_PA0 GPIO_ACTIVE_LOW>;
-		enable-gpios = <&gpio4 RK_PC0 GPIO_ACTIVE_HIGH>;
-//		spi-max-frequency = <1200000>;
+		lcd@0 {
+			status = "okay";
+			compatible = "samsung,ams495qa01";
+			reg = <0>;
+			vdd-supply = <&vcc3v3_lcd0_n>;
+//			vci-supply = <TODO>; is it hardwired to battery?
+//			elvdd-supply = <TODO>;
+			reset-gpios = <&gpio4 RK_PA0 GPIO_ACTIVE_LOW>;
+			enable-gpios = <&gpio4 RK_PC0 GPIO_ACTIVE_HIGH>;
+//			spi-max-frequency = <1200000>;
 
-		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_lcd>;
+//			pinctrl-names = "default";
+//			pinctrl-0 = <&lcd_lcd>;
 
-		port {
-			mipi_in_panel: endpoint {
-				remote-endpoint = <&mipi_out_panel>;
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					panel_in_dsi: endpoint {
+						remote-endpoint = <&dsi_out_panel>;
+					};
+				};
 			};
 		};
 	};
 };
-#endif
+
+&dsi0 {
+	status = "okay";
+
+	ports {
+		port@1 {
+			reg = <1>;
+			dsi_out_panel: endpoint {
+				remote-endpoint = <&panel_in_dsi>;
+			};
+		};
+	};
+};
 
 &cpu0 {
 	cpu-supply = <&vdd_cpu>;
@@ -140,13 +159,13 @@ spi-lcd {
 	status = "okay";
 };
 
-&hdmi {
+/*&hdmi {
 	status = "okay";
 };
 
 &hdmi_in {
-	hdmi_in_vp0: endpoint {
-		remote-endpoint = <&vp0_out_hdmi>;
+	hdmi_in_vp1: endpoint {
+		remote-endpoint = <&vp1_out_hdmi>;
 	};
 };
 
@@ -154,7 +173,7 @@ spi-lcd {
 	hdmi_out_con: endpoint {
 		remote-endpoint = <&hdmi_con_in>;
 	};
-};
+};*/
 
 &i2c0 {
 	status = "okay";
@@ -549,6 +568,10 @@ spi-lcd {
 	};
 };
 
+&video_phy0 {
+	status = "okay";
+};
+
 &vop {
 	assigned-clocks = <&cru DCLK_VOP0>, <&cru DCLK_VOP1>;
 	assigned-clock-parents = <&pmucru PLL_HPLL>, <&cru PLL_VPLL>;
@@ -559,9 +582,23 @@ spi-lcd {
 	status = "okay";
 };
 
-&vp0 {
-	vp0_out_hdmi: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
+/*&vp1 {
+	vp1_out_hdmi: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
 		reg = <ROCKCHIP_VOP2_EP_HDMI0>;
-		remote-endpoint = <&hdmi_in_vp0>;
+		remote-endpoint = <&hdmi_in_vp1>;
+	};
+};*/
+
+&dsi0_in {
+	dsi0_in_vp0: endpoint@0 {
+		reg = <0>;
+		remote-endpoint = <&vp0_out_dsi0>;
+	};
+};
+
+&vp0 {
+	vp0_out_dsi0: endpoint@ROCKCHIP_VOP2_EP_MIPI0 {
+		reg = <ROCKCHIP_VOP2_EP_MIPI0>;
+		remote-endpoint = <&dsi0_in_vp0>;
 	};
 };
