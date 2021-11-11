@@ -1024,10 +1024,8 @@ static const struct component_ops dw_mipi_dsi_rockchip_ops = {
 	.unbind	= dw_mipi_dsi_rockchip_unbind,
 };
 
-static int dw_mipi_dsi_rockchip_host_attach(void *priv_data,
-					    struct mipi_dsi_device *device)
+static int dw_mipi_dsi_rockchip_host_attach(struct dw_mipi_dsi_rockchip *dsi)
 {
-	struct dw_mipi_dsi_rockchip *dsi = priv_data;
 	struct device *second;
 	int ret;
 
@@ -1065,10 +1063,8 @@ static int dw_mipi_dsi_rockchip_host_attach(void *priv_data,
 	return 0;
 }
 
-static int dw_mipi_dsi_rockchip_host_detach(void *priv_data,
-					    struct mipi_dsi_device *device)
+static int dw_mipi_dsi_rockchip_host_detach(struct dw_mipi_dsi_rockchip *dsi)
 {
-	struct dw_mipi_dsi_rockchip *dsi = priv_data;
 	struct device *second;
 
 	second = dw_mipi_dsi_rockchip_find_second(dsi);
@@ -1083,11 +1079,6 @@ static int dw_mipi_dsi_rockchip_host_detach(void *priv_data,
 
 	return 0;
 }
-
-static const struct dw_mipi_dsi_host_ops dw_mipi_dsi_rockchip_host_ops = {
-	.attach = dw_mipi_dsi_rockchip_host_attach,
-	.detach = dw_mipi_dsi_rockchip_host_detach,
-};
 
 static int dw_mipi_dsi_rockchip_dphy_bind(struct device *dev,
 					  struct device *master,
@@ -1445,7 +1436,6 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
 	dsi->pdata.base = dsi->base;
 	dsi->pdata.max_data_lanes = dsi->cdata->max_data_lanes;
 	dsi->pdata.phy_ops = &dw_mipi_dsi_rockchip_phy_ops;
-	dsi->pdata.host_ops = &dw_mipi_dsi_rockchip_host_ops;
 	dsi->pdata.priv_data = dsi;
 	platform_set_drvdata(pdev, dsi);
 
@@ -1471,12 +1461,16 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+	dw_mipi_dsi_rockchip_host_attach(dsi);
+
 	return 0;
 }
 
 static int dw_mipi_dsi_rockchip_remove(struct platform_device *pdev)
 {
 	struct dw_mipi_dsi_rockchip *dsi = platform_get_drvdata(pdev);
+
+	dw_mipi_dsi_rockchip_host_detach(dsi);
 
 	dw_mipi_dsi_remove(dsi->dmd);
 
