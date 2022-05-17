@@ -374,7 +374,7 @@ spi-lcd {
 
 &sdmmc0 { // "internal" sd card
 	bus-width = <4>;
-	max-frequency = <150000000>;
+	max-frequency = <50000000>;
 	supports-sd;
 	disable-wp;
 	cap-sd-highspeed;
@@ -389,9 +389,29 @@ spi-lcd {
 	status = "okay";
 };
 
+&sdmmc1 {
+	max-frequency = <150000000>;
+	supports-sd;
+	bus-width = <4>;
+	disable-wp;
+	cap-mmc-highspeed;
+	cap-sd-highspeed;
+	keep-power-in-suspend;	
+	card-detect-delay = <800>;
+	cd-gpios = <&gpio2 RK_PB2 GPIO_ACTIVE_LOW>; /*[> CD GPIO <]*/
+	vqmmc-supply = <&vcc1v8_dvp>;	
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk>;
+	sd-uhs-sdr12;
+	sd-uhs-sdr25;
+	sd-uhs-sdr50;
+	sd-uhs-sdr104;
+	status = "okay";
+};
+
 &sdmmc2 { // sdio wifi
 	bus-width = <4>;
-	max-frequency = <100000000>;
+	max-frequency = <50000000>;
 	supports-sdio;
 	disable-wp;
 	cap-sd-highspeed;
