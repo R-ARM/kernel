@@ -440,6 +440,17 @@
 		regulator-max-microvolt = <5500000>;
 		vin-supply = <&vcc5v0_sys>;
 	};
+
+	vcc_wifi: vcc-wifi-regulator {
+		compatible = "regulator-fixed";
+		enable-active-high;
+		gpio = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_pwr>;
+		regulator-name = "wifi_enable";
+		regulator-always-on;
+		regulator-boot-on;
+	};
 };
 
 &cpu_thermal {
@@ -1082,6 +1093,12 @@
 		};
 	};
 
+	wifi {
+		wifi_pwr: wifi-pwr-en {
+			rockchip,pins = <3 RK_PC1 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+
 	btns {
 		btn_pins: btn-pins {
 			rockchip,pins = 
@@ -1211,6 +1228,20 @@
 &usbdrd_dwc3_1 {
 	status = "okay";
 	dr_mode = "host";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	wifi_card: device@1 {
+		compatible = "usbbda,f179";
+		reg = <1>;
+		#size-cells = <0>;
+		#address-cells = <2>;
+
+		interface@0 {
+			compatible = "usbifbda,f179.config1.0";
+			reg = <0 1>;
+		};
+	};
 };
 
 &vopb {
