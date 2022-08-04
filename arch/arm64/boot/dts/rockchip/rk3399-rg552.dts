@@ -102,7 +102,7 @@
 		axis@0 {
 			reg = <0>;
 			abs-flat = <32>;
-			abs-fuzz = <10>;
+			abs-fuzz = <16>;
 			abs-range = <1024 0>;
 			linux,code = <ABS_X>;
 		};
@@ -110,7 +110,7 @@
 		axis@1 {
 			reg = <1>;
 			abs-flat = <32>;
-			abs-fuzz = <10>;
+			abs-fuzz = <16>;
 			abs-range = <0 1024>;
 			linux,code = <ABS_RX>;
 		};
@@ -118,7 +118,7 @@
 		axis@2 {
 			reg = <2>;
 			abs-flat = <32>;
-			abs-fuss = <10>;
+			abs-fuzz = <16>;
 			abs-range = <1024 0>;
 			linux,code = <ABS_Y>;
 		};
@@ -126,7 +126,7 @@
 		axis@3 {
 			reg = <3>;
 			abs-flat = <32>;
-			abs-fuss = <10>;
+			abs-fuzz = <16>;
 			abs-range = <0 1024>;
 			linux,code = <ABS_RY>;
 		};
