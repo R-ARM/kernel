@@ -240,11 +240,11 @@
 		simple-audio-card,mclk-fs = <256>;
 
 		simple-audio-card,widgets =
-			"Headphone", "Headphone Jack",
+			"Headphone", "Headphones",
 			"Speaker", "Speaker";
 		simple-audio-card,routing =
-			"Headphone Jack", "HPOL",
-			"Headphone Jack", "HPOR",
+			"Headphones", "HPOL",
+			"Headphones", "HPOR",
 			"Speaker Amplifier INL", "HPOL",
 			"Speaker Amplifier INR", "HPOR",
 			"Speaker", "Speaker Amplifier OUTL",
@@ -990,14 +990,15 @@
 };
 
 &pinctrl {
-        es8316 {
-                hp_det_pin: hp-det-pin {
-                        rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_down>;
-                };
+	es8316 {
+		hp_det_pin: hp-det-pin {
+				rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
+		};
+
 		spk_en_pin: spk-en-pin {
 			rockchip,pins = <1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_down>;
 		};
-        };
+	};
 
         i2s1 {
                 i2s_8ch_mclk_pin: i2s-8ch-mclk-pin {
