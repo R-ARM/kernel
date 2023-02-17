@@ -566,7 +566,7 @@ config DRM_PANEL_SHARP_LS043T1LE01
 	  (540x960) DSI panel as found on the Qualcomm APQ8074 Dragonboard
 
 config DRM_PANEL_SHARP_LS054B3SX01
-	bool "Sharp LS054B3SX01 1152x1080 video mode panel"
+	tristate "Sharp LS054B3SX01 1152x1080 video mode panel"
 	depends on OF
 	depends on DRM_MIPI_DSI
 	depends on BACKLIGHT_CLASS_DEVICE
